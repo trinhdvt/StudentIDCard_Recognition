@@ -23,7 +23,8 @@ class Detector:
                                          swapRB=True, crop=False)
         return blob_img
 
-    def predict(self, img):
+    def predict(self, origin_img):
+        img = origin_img.copy()
         blob_img = self.preprocess_image(img)
         clone_img = img.copy()
         (origin_h, origin_w) = img.shape[:2]
