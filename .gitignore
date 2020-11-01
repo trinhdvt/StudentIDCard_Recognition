@@ -6,3 +6,9 @@
 .idea/vcs.xml
 
 /resized_img/
+cropper/__pycache__/
+detector/__pycache__/
+detector/config/detector_model.weights
+detector/config/yolo-tinyv4-obj_best.weights
+detector/config/yolo-tinyv4-obj_final.weights
+cropper/test_img/
