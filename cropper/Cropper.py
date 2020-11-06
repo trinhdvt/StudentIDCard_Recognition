@@ -76,14 +76,13 @@ class Cropper:
         #
         return new_width, new_height
 
-    def transform_img(self, img_path, resize=False):
+    def transform_img(self, img, resize=False):
         """
 
-        :param img_path: Đường dẫn tới file ảnh đầu vào
+        :param img: Ảnh đầu vào được đọc bằng opencv
         :param resize: True if size of img > (1280, 720)
         :return: ảnh chỉ chứa thẻ sinh viên
         """
-        img = cv2.imread(img_path)
         (h, w, c) = img.shape
         if resize and (w, h) > (1280, 720):
             if w > h:
@@ -100,5 +99,7 @@ class Cropper:
         warped = cv2.warpPerspective(img, M, (width, height))
         return warped
 
-    def predict(self, img_path: str, resize=False):
-        return self.transform_img(img_path, resize)
+    def predict(self, img, img_path=None, resize=False):
+        if img is None and img_path is not None:
+            img = cv2.imread(img_path)
+        return self.transform_img(img, resize)
