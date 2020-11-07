@@ -76,13 +76,14 @@ class Cropper:
         #
         return new_width, new_height
 
-    def transform_img(self, img, resize=False):
+    def transform_img(self, origin_img, resize=False):
         """
 
-        :param img: Ảnh đầu vào được đọc bằng opencv
-        :param resize: True if size of img > (1280, 720)
+        :param origin_img: Ảnh đầu vào được đọc bằng opencv
+        :param resize: should be True if size of img > (1280, 720)
         :return: ảnh chỉ chứa thẻ sinh viên
         """
+        img = origin_img.copy()
         (h, w, c) = img.shape
         if resize and (w, h) > (1280, 720):
             if w > h:
@@ -96,8 +97,8 @@ class Cropper:
         # rotate img
         dst_point = np.array([[0, 0], [width, 0], [width, height], [0, height]], dtype="float32")
         M = cv2.getPerspectiveTransform(four_corner, dst_point)
-        warped = cv2.warpPerspective(img, M, (width, height))
-        return warped
+        transformed_img = cv2.warpPerspective(img, M, (width, height))
+        return transformed_img
 
     def predict(self, img, img_path=None, resize=False):
         if img is None and img_path is not None:
