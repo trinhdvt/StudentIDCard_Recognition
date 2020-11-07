@@ -23,20 +23,21 @@ class Detector:
                                          swapRB=True, crop=False)
         return blob_img
 
-    def predict(self, origin_img):
+    def predict(self, origin_img, show_time=False):
         img = origin_img.copy()
         blob_img = self.preprocess_image(img)
         clone_img = img.copy()
         (origin_h, origin_w) = img.shape[:2]
         self.net.setInput(blob_img)
 
-        start = time.time()
+        if show_time:
+            start = time.time()
         output = self.net.forward(self.ln)
-        end = time.time()
-        print(f"Time = {end - start}")
+        if show_time:
+            end = time.time()
+            print(f"Time = {end - start}")
         boxes = []
         confidences = []
-        class_ids = []
         for out in output:
             for detection in out:
                 scores = detection[5:]
@@ -50,7 +51,6 @@ class Detector:
                     y = int(centerY - height / 2)
                     boxes.append([x, y, int(width), int(height)])
                     confidences.append(float(confidence))
-                    class_ids.append(class_id)
 
         boxes_idx = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.3)
         if len(boxes_idx) > 0:
