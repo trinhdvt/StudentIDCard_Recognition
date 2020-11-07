@@ -4,7 +4,6 @@ opencv-python==4.4.0.46
 PyYAML==5.3.1
 torch==1.7.0+cpu
 vietocr==0.3.3
-
 Flask~=1.1.2
 requests~=2.24.0
-matplotlib~=3.3.2
+Pillow~=8.0.1
