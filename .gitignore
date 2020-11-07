@@ -12,3 +12,7 @@ detector/config/detector_model.weights
 detector/config/yolo-tinyv4-obj_best.weights
 detector/config/yolo-tinyv4-obj_final.weights
 cropper/test_img/
+.ipynb_checkpoints/
+cropper/.ipynb_checkpoints/
+.gitignore
+reader/tmp/
