@@ -2,23 +2,15 @@ from utils.utils import base64_to_cv2img
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
-from cropper.Cropper import Cropper
-from detector.Detector import Detector
-from reader.Reader import Reader
-from reader.Config import Cfg
 from PIL import Image
+from utils.utils import load_model
+from utils import config
 import time
 
-cropper = Cropper()
-yolo_path = "../detector/config/detector_model.cfg"
-yolo_weight = "../detector/config/detector_model.weights"
-detector = Detector(yolo_path, yolo_weight)
-reader_cfg = Cfg.load_config_from_file("../reader/tmp/cfg.yml")
-reader_cfg['weights'] = '../reader/tmp/transformerocr2.pth'
-reader_cfg['device'] = 'cpu'
-reader = Reader(reader_cfg)
+global cropper
+global detector
+global reader
 
-port = '8000'
 app = Flask(__name__)
 CORS(app)
 
@@ -29,13 +21,16 @@ def index():
     return "Welcome to Flask API"
 
 
-@app.route("/id_recognize", methods=['POST'])
+@app.route(config.API_NAME, methods=['POST'])
 @cross_origin()
 def run_for_your_life():
     start = time.time()
+    # get data from request
     img_b64 = request.form.get('image')
+    # convert base64 string to img
     img = base64_to_cv2img(img_b64)
-    cropped = cropper.predict(img, resize=True)
+    # run module id recognize
+    cropped = cropper.predict(img, resize=False)
     try:
         id_only_img, _ = detector.predict(cropped)
     except TypeError:
@@ -46,9 +41,10 @@ def run_for_your_life():
         mssv = reader.predict(id_only_img)
         end = time.time()
 
+        # send back data
         return_data = {
-            'time': end - start,
-            'result': mssv
+            'mssv': mssv,
+            'time': end - start
         }
         return return_data
     except AssertionError:
@@ -56,4 +52,7 @@ def run_for_your_life():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=port)
+    print("Model is loading")
+    cropper, detector, reader = load_model()
+    print("Model is ready!")
+    app.run(debug=True, host=config.API_ADDRESS, port=config.API_PORT)

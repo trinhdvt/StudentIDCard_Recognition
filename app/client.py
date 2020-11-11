@@ -1,14 +1,19 @@
 from utils.utils import cv2img_to_base64
+from utils import config
 import requests
-import time
 
-start = time.time()
-url = 'http://127.0.0.1:8000/id_recognize'
-img_path = "../cropper/test_img/tung2.jpg"
-im_b64 = cv2img_to_base64(cv2_img=None, img_path=img_path)
-results = requests.post(url, data={
-    'image': im_b64
-})
-print(time.time() - start)
-print(results)
-print(results.text)
+
+def send_request(url, img_path):
+    im_b64 = cv2img_to_base64(img_path)
+    params = {
+        'image': im_b64
+    }
+    response = requests.post(url, data=params)
+    return response.text
+
+
+if __name__ == '__main__':
+    local_img = "./test/dung4.jpg"
+    print(send_request(config.API_URL, local_img))
+    local_img = "./test/hai2.jpg"
+    print(send_request(config.API_URL, local_img))
