@@ -1,4 +1,5 @@
 from utils.utils import base64_to_cv2img
+from utils.utils import cv2img_to_base64
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
@@ -40,11 +41,11 @@ def run_for_your_life():
         id_only_img = Image.fromarray(id_only_img)
         mssv = reader.predict(id_only_img)
         end = time.time()
-
         # send back data
         return_data = {
             'mssv': mssv,
-            'time': end - start
+            'time': end - start,
+            'image': cv2img_to_base64(None, cropped, False).decode('utf-8')
         }
         return return_data
     except AssertionError:
