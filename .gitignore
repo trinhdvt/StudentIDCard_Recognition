@@ -15,4 +15,13 @@ cropper/test_img/
 .ipynb_checkpoints/
 cropper/.ipynb_checkpoints/
 .gitignore
-reader/tmp/
+reader/config/
+!/firebase-test/
+firebase-test/
+reader/__pycache__/
+utils/__pycache__/
+app/key.json
+app/server1.py
+app/server2.py
+app/test/
+app/for_pi/
