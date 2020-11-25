@@ -22,7 +22,7 @@ def index():
     return "Welcome to Flask API"
 
 
-@app.route(config.API_NAME, methods=['POST'])
+@app.route(config.MSSV_API_NAME, methods=['POST'])
 @cross_origin()
 def run_for_your_life():
     start = time.time()
@@ -56,4 +56,4 @@ if __name__ == '__main__':
     print("Model is loading")
     cropper, detector, reader = load_model()
     print("Model is ready!")
-    app.run(debug=True, host=config.API_ADDRESS, port=config.API_PORT)
+    app.run(debug=True, host=config.MSSV_API_ADDRESS, port=config.API_PORT)
