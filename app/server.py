@@ -1,4 +1,5 @@
 from utils.utils import base64_to_cv2img
+from utils.utils import cv2img_to_base64
 from flask import Flask
 from flask import request
 from flask_cors import CORS, cross_origin
@@ -21,7 +22,7 @@ def index():
     return "Welcome to Flask API"
 
 
-@app.route(config.API_NAME, methods=['POST'])
+@app.route(config.MSSV_API_NAME, methods=['POST'])
 @cross_origin()
 def run_for_your_life():
     start = time.time()
@@ -40,11 +41,11 @@ def run_for_your_life():
         id_only_img = Image.fromarray(id_only_img)
         mssv = reader.predict(id_only_img)
         end = time.time()
-
         # send back data
         return_data = {
             'mssv': mssv,
-            'time': end - start
+            'time': end - start,
+            'image': cv2img_to_base64(None, cropped, False).decode('utf-8')
         }
         return return_data
     except AssertionError:
@@ -55,4 +56,4 @@ if __name__ == '__main__':
     print("Model is loading")
     cropper, detector, reader = load_model()
     print("Model is ready!")
-    app.run(debug=True, host=config.API_ADDRESS, port=config.API_PORT)
+    app.run(debug=True, host=config.MSSV_API_ADDRESS, port=config.API_PORT)
