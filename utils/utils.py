@@ -1,44 +1,36 @@
-from cropper.Cropper import Cropper
-from detector.Detector import Detector
-from reader.Reader import Reader
-from reader.Config import Cfg
-from utils import config as cfg
 from datetime import datetime
 from utils import config
+from PIL import Image
 import cv2
 import numpy as np
 import base64
 import os
-
-
-def load_model():
-    cropper = Cropper()
-    detector = Detector(cfg.DETECTOR_CFG, cfg.DETECTOR_WEIGHT)
-    reader_cfg = Cfg.load_config_from_file(cfg.READER_CFG)
-    reader_cfg['weights'] = cfg.READER_WEIGHT
-    reader_cfg['device'] = cfg.DEVICE
-    reader = Reader(reader_cfg)
-    return cropper, detector, reader
+import gdown
 
 
 def resize_img(img, img_path=None):
     if img_path:
         img = cv2.imread(img_path)
     (h, w, _) = img.shape
-    if h > cfg.IMG_HEIGHT:
-        ratio = cfg.IMG_HEIGHT / float(h)
-        dim = (int(ratio * w), cfg.IMG_HEIGHT)
+    if h > config.IMG_HEIGHT:
+        ratio = config.IMG_HEIGHT / float(h)
+        dim = (int(ratio * w), config.IMG_HEIGHT)
         img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-    # if w > cfg.IMG_WIDTH:
-    #     ratio = cfg.IMG_WIDTH / float(w)
-    #     dim = (cfg.IMG_WIDTH, int(ratio * h))
+    # if w > config.IMG_WIDTH:
+    #     ratio = config.IMG_WIDTH / float(w)
+    #     dim = (config.IMG_WIDTH, int(ratio * h))
     #     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-    # if (w, h) > (cfg.IMG_WIDTH, cfg.IMG_HEIGHT):
+    # if (w, h) > (config.IMG_WIDTH, config.IMG_HEIGHT):
     #     if w > h:
-    #         img = cv2.resize(img, (cfg.IMG_WIDTH, cfg.IMG_HEIGHT))
+    #         img = cv2.resize(img, (config.IMG_WIDTH, config.IMG_HEIGHT))
     #     else:
-    #         img = cv2.resize(img, (cfg.IMG_HEIGHT, cfg.IMG_WIDTH))
+    #         img = cv2.resize(img, (config.IMG_HEIGHT, config.IMG_WIDTH))
     return img
+
+
+def cv2img_to_pil(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    return Image.fromarray(img)
 
 
 def cv2img_to_base64(img_path, img=None, resize=True):
@@ -97,6 +89,20 @@ def to_web_storage(*img_path):
         assert response_code == 0
         os.remove(file_path)
 
+
+def download_model(model_name):
+    url = "https://drive.google.com/uc?id="
+    if model_name == "detector":
+        gdown.download(url + config.DETECTOR_WEIGHT_DRIVE_ID,
+                       config.DETECTOR_WEIGHT)
+    elif model_name == "reader":
+        gdown.download(url + config.READER_WEIGHT_DRIVE_ID,
+                       config.READER_WEIGHT)
+    elif model_name == "reader_backup":
+        gdown.download(url + config.READER_BACKUP_WEIGHT_DRIVE_ID,
+                       config.READER_BACKUP_WEIGHT)
+    else:
+        raise Exception("Unknown model!")
 # def resize_ratio(img_path, width):
 #     img = cv2.imread(img_path)
 #     (h, w, _) = img.shape
