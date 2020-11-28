@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 import time
+import os
+from utils.utils import download_model
 
 
 class Detector:
@@ -9,6 +11,8 @@ class Detector:
             labels = ['id']
         self.cfg_path = cfg_path
         self.weight_path = weight_path
+        if not os.path.exists(weight_path):
+            download_model("detector")
         self.IMG_WIDTH = 608
         self.IMG_HEIGHT = 608
         self.labels = labels
