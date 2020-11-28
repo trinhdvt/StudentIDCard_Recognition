@@ -85,14 +85,16 @@ def generate_img_path(*content):
     :param content: (bsx_text, mssv_text)
     :return: unique path base on current time
     """
-    current_time = datetime.now().strftime("%d/%m/%Y_%H_%M_%S")
+    current_time = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
     img_paths = [f"{config.LOCAL_IMG_STORAGE}{c}_{current_time}.jpg" for c in content]
+    img_paths = [path.replace(" ", "") for path in img_paths]
     return img_paths
 
 
 def to_web_storage(*img_path):
     for file_path in img_path:
-        os.system(f"scp {file_path} nghiapham@{config.WEB_IP}:{config.WEB_IMG_STORAGE}")
+        response_code = os.system(f"scp {file_path} nghiapham@{config.WEB_IP}:{config.WEB_IMG_STORAGE}")
+        assert response_code == 0
         os.remove(file_path)
 
 # def resize_ratio(img_path, width):
