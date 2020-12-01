@@ -12,19 +12,10 @@ def resize_img(img, img_path=None):
     if img_path:
         img = cv2.imread(img_path)
     (h, w, _) = img.shape
-    if h > config.IMG_HEIGHT:
-        ratio = config.IMG_HEIGHT / float(h)
-        dim = (int(ratio * w), config.IMG_HEIGHT)
+    if w > config.IMG_WIDTH:
+        ratio = config.IMG_WIDTH / float(w)
+        dim = (config.IMG_WIDTH, int(ratio * h))
         img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-    # if w > config.IMG_WIDTH:
-    #     ratio = config.IMG_WIDTH / float(w)
-    #     dim = (config.IMG_WIDTH, int(ratio * h))
-    #     img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-    # if (w, h) > (config.IMG_WIDTH, config.IMG_HEIGHT):
-    #     if w > h:
-    #         img = cv2.resize(img, (config.IMG_WIDTH, config.IMG_HEIGHT))
-    #     else:
-    #         img = cv2.resize(img, (config.IMG_HEIGHT, config.IMG_WIDTH))
     return img
 
 
@@ -103,13 +94,24 @@ def download_model(model_name):
                        config.READER_BACKUP_WEIGHT)
     else:
         raise Exception("Unknown model!")
-# def resize_ratio(img_path, width):
-#     img = cv2.imread(img_path)
-#     (h, w, _) = img.shape
-#     ratio = width / float(w)
-#     dim = (width, int(ratio * h))
-#     resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
-#     cv2.imwrite("../x.jpg", resized)
-#
-#
-# resize_ratio("../resized_img/hien1.jpg", 768)
+
+
+def parse_img_size(cfg_path):
+    """
+
+    :param cfg_path: Config path for detector (YOLOv4's config file only)
+    :return: img_width and img_height in config file
+    """
+    img_width = None
+    img_height = None
+    with open(cfg_path, "r") as f:
+        while f.readable():
+            line = f.readline()
+            if line.startswith("width"):
+                img_width = int(line.split('=')[-1])
+            if line.startswith("height"):
+                img_height = int(line.split('=')[-1])
+            if img_height and img_height:
+                return img_width, img_height
+    assert img_width is not None
+    assert img_height is not None
