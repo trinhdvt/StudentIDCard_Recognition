@@ -1,4 +1,12 @@
-ROOT_CONTENT = "C:/Users/congp/Desktop/StudentIDCard_Recognition"
+import platform
+
+global ROOT_CONTENT
+if platform.system() == 'Linux':
+    ROOT_CONTENT = "/home/dvt/Desktop/StudentIDCard_Recognition"
+elif platform.system() == 'Windows':
+    ROOT_CONTENT = "C:/Users/congp/Desktop/StudentIDCard_Recognition"
+else:
+    raise Exception("OS not supported!")
 # -------------------- CROPPER CONFIG --------------------
 IMG_WIDTH = 768
 IMG_HEIGHT = 480
@@ -16,6 +24,7 @@ DEVICE = "cpu"
 # -------------------- WEB_SERVER CONFIG --------------------
 MSSV_API_NAME = "/id_recognize"
 MSSV_API_ADDRESS = "0.0.0.0"
+API_PORT = 8000
 MSSV_API_URL = "http://0.0.0.0:8000/id_recognize"
 BSX_API_URL = "http://172.20.10.9:8000/bsx"
 # -------------------- WEB RESOURCE CONFIG --------------------
