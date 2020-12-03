@@ -1,11 +1,13 @@
 from datetime import datetime
-from utils import config
+from tools import config
 from PIL import Image
+from skimage import io
 import cv2
 import numpy as np
 import base64
 import os
 import gdown
+import requests
 
 
 def resize_img(img, img_path=None):
@@ -115,3 +117,18 @@ def parse_img_size(cfg_path):
                 return img_width, img_height
     assert img_width is not None
     assert img_height is not None
+
+
+def verify_img(img_path, mssv_path):
+    try:
+        im1 = io.imread(img_path)
+        im1 = io.imread(mssv_path)
+    except:
+        return False
+    return True
+
+
+def turn_led_on(ledName: str):
+    requests.get(config.LED_API_URL, params={
+        'LED': ledName
+    })
