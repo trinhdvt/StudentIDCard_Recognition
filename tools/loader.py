@@ -2,7 +2,7 @@ from cropper.Cropper import Cropper
 from detector.Detector import Detector
 from reader.Reader import Reader
 from reader.Config import Cfg
-from utils import config
+from tools import config
 
 
 def load_model():
