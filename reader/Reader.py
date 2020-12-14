@@ -1,13 +1,19 @@
 from vietocr.tool.translate import build_model, translate, process_input
+from tools.utils import download_model
 import torch
+import os
 
 
 class Reader:
-    def __init__(self, config):
+    def __init__(self, config, backup=False):
         device = config['device']
         model, vocab = build_model(config)
         weights = config['weights']
-
+        if not os.path.exists(weights):
+            if backup:
+                download_model("reader_backup")
+            else:
+                download_model("reader")
         model.load_state_dict(torch.load(weights, map_location=torch.device(device)))
 
         self.config = config
