@@ -1,25 +1,21 @@
+# import gevent.monkey
+#
+# gevent.monkey.patch_all()
+import grequests
+import json
+import time
+import glob
+import os
+from threading import Thread
 from datetime import datetime
 from tools import config, utils
 from firebase_admin import initialize_app, credentials, db
-from threading import Thread
-import json
-import time
-import grequests
-import glob
-import os
 
 # ---------------- INITIALIZE FIREBASE CONNECT --------------------
-cred = credentials.Certificate(config.FIREBASE_KEY2)
+cred = credentials.Certificate(config.FIREBASE_KEY)
 initialize_app(cred, {
-    'databaseURL': config.FIREBASE_URL2
+    'databaseURL': config.FIREBASE_URL
 })
-
-
-def insert_data(node_key: str, data: dict, push: bool):
-    if push:
-        db.reference(node_key).push(data)
-    else:
-        db.reference(node_key).set(data)
 
 
 def handle_new_data(new_bsx, new_sv):
@@ -40,6 +36,8 @@ def handle_new_data(new_bsx, new_sv):
     request = grequests.map(request)
     send_done = time.time()
     print(f"Time for send request {send_done - send_start}")
+    assert request[0].status_code == 200, "Plate cannot recognize"
+    assert request[1].status_code == 200, "ID-card cannot recognize"
     # -------------------- REQUEST RESPONSE --------------------
     process_start = time.time()
     request_data = [json.loads(rq.text) for rq in request]
@@ -49,10 +47,11 @@ def handle_new_data(new_bsx, new_sv):
     mssv_image = request_data[1]['image']
     # -------------------- SEND TO LOCAL_WEB_SERVER --------------------
     bsx_path, mssv_path = utils.save_to_local((bsx_text, bsx_image), (mssv_text, mssv_image))
-    utils.to_web_storage(bsx_path, mssv_path)
+    Thread(target=utils.to_web_storage, args=(bsx_path, mssv_path,)).start()
+    # utils.to_web_storage(bsx_path, mssv_path)
     process_end = time.time()
     print(f"Process time {process_end - process_start}")
-    # -------------------- LOGIC ANALYST --------------------
+    # -------------------- SYSTEM LOGIC --------------------
     new_data = {
         'mssv': mssv_text,
         'imgIDCard': mssv_path.split("/")[-1],
@@ -62,7 +61,7 @@ def handle_new_data(new_bsx, new_sv):
         'timeOut': ""
     }
     #
-    Thread(target=insert_data, args=("/input", new_data, False)).start()
+    Thread(target=db.reference("/input").set, args=(new_data,)).start()
     #
     snap = db.reference("/baixe").order_by_child("bsx").equal_to(new_data['bsx']).get()
     query_data = [(key, values) for key, values in snap.items()]
@@ -79,9 +78,8 @@ def handle_new_data(new_bsx, new_sv):
             #
             Thread(target=utils.turn_led_on, args=('green',)).start()
             #
-            db.reference("/baixe").child(update_key).update({
-                'timeOut': new_data['timeOut']
-            })
+            Thread(target=db.reference("/baixe").child(update_key).update,
+                   args=({'timeOut': new_data['timeOut']},)).start()
         else:
             print("Warning warning! Yellow LED is ON! Check it out!")
             #
@@ -91,10 +89,9 @@ def handle_new_data(new_bsx, new_sv):
         print("Xe vao! Green LED is ON!")
         Thread(target=utils.turn_led_on, args=('green',)).start()
         #
-        Thread(target=insert_data, args=("/baixe", new_data, True)).start()
+        Thread(target=db.reference("/baixe").push,
+               args=(new_data,)).start()
     #
-    os.remove(new_bsx)
-    os.remove(new_sv)
 
 
 if __name__ == '__main__':
@@ -107,8 +104,19 @@ if __name__ == '__main__':
             if not utils.verify_img(bsx_path, mssv_path):
                 continue
             print("Verify done!")
-            start = time.time()
-            handle_new_data(bsx_path, mssv_path)
-            end = time.time()
-            print(f"Total time {end - start}")
+            #
+            try:
+                start = time.time()
+                #
+                handle_new_data(bsx_path, mssv_path)
+                #
+                end = time.time()
+                print(f"Total time {end - start}")
+                print("-" * 40)
+            except Exception as e:
+                print(f"Error: {e}")
+            finally:
+                os.remove(bsx_path)
+                os.remove(bsx_img)
+            #
         time.sleep(1)
