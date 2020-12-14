@@ -13,11 +13,13 @@ import requests
 def resize_img(img, img_path=None):
     if img_path:
         img = cv2.imread(img_path)
+    #
     (h, w, _) = img.shape
     if w > config.IMG_WIDTH:
         ratio = config.IMG_WIDTH / float(w)
         dim = (config.IMG_WIDTH, int(ratio * h))
         img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+    #
     return img
 
 
@@ -26,14 +28,14 @@ def cv2img_to_pil(img):
     return Image.fromarray(img)
 
 
-def cv2img_to_base64(img_path, img=None, resize=True):
+def cv2img_to_base64(img_path, img=None, resize=False):
     if img is None:
         img = cv2.imread(img_path)
     if resize:
         img = resize_img(img)
     _, im_arr = cv2.imencode(".jpg", img)
     im_bytes = im_arr.tobytes()
-
+    #
     return base64.b64encode(im_bytes)
 
 
@@ -42,7 +44,7 @@ def base64_to_cv2img(b64_encoded: str, save_path=None):
     b64_decoded = base64.b64decode(b64_encoded)
     img = np.frombuffer(b64_decoded, dtype=np.uint8)
     img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-
+    #
     if not save_path:
         return img
     else:
@@ -51,6 +53,7 @@ def base64_to_cv2img(b64_encoded: str, save_path=None):
 
 def save_to_local(bsx_data: tuple, sv_data: tuple) -> tuple:
     """
+    Save image from response
 
     :param bsx_data: (bsx_text, bsx_image)
     :param sv_data:  (mssv_text, mssv_image)
@@ -59,8 +62,10 @@ def save_to_local(bsx_data: tuple, sv_data: tuple) -> tuple:
     bsx_text, bsx_image = bsx_data
     mssv_text, mssv_image = sv_data
     bsx_path, mssv_path = generate_img_path(bsx_text, mssv_text)
+    #
     base64_to_cv2img(bsx_image, bsx_path)
     base64_to_cv2img(mssv_image, mssv_path)
+    #
     return bsx_path, mssv_path
 
 
@@ -77,9 +82,14 @@ def generate_img_path(*content):
 
 
 def to_web_storage(*img_path):
+    """
+    Send image to Web-Client by SCP command
+
+    :param img_path: image's path to send
+    """
     for file_path in img_path:
         response_code = os.system(f"scp {file_path} nghiapham@{config.WEB_IP}:{config.WEB_IMG_STORAGE}")
-        assert response_code == 0
+        assert response_code == 0, "Send image use SCP failed!"
         os.remove(file_path)
 
 
@@ -100,6 +110,7 @@ def download_model(model_name):
 
 def parse_img_size(cfg_path):
     """
+    Read model's input size from config file
 
     :param cfg_path: Config path for detector (YOLOv4's config file only)
     :return: img_width and img_height in config file
@@ -119,10 +130,16 @@ def parse_img_size(cfg_path):
     assert img_height is not None
 
 
-def verify_img(img_path, mssv_path):
+def verify_img(*img_path):
+    """
+    Check if image is ready to process or not
+
+    :param img_path: image's path to verify
+    :return: True if all image are ready to process, otherwise
+    """
     try:
-        im1 = io.imread(img_path)
-        im1 = io.imread(mssv_path)
+        for fn in img_path:
+            _ = io.imread(fn)
     except:
         return False
     return True

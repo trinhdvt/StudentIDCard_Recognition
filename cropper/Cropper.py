@@ -17,6 +17,7 @@ class Cropper:
 
     def find_four_corner(self, img):
         """
+        Tìm toạ độ 4 góc của thẻ sinh viên
 
         :param img: Ảnh chứa thẻ sinh viên
         :return: Toạ độ 4 góc thẻ (top_left -> top_right -> bottom_right -> bottom_left)
@@ -59,6 +60,7 @@ class Cropper:
 
     def calculate_fit_size(self, corner_pts):
         """
+        Tính size của ảnh sau khi cắt ra
 
         :param corner_pts: Toạ độ 4 góc
         :return: Size tương ứng
@@ -78,18 +80,14 @@ class Cropper:
 
     def transform_img(self, origin_img, resize=False):
         """
-
         :param origin_img: Ảnh đầu vào được đọc bằng opencv
-        :param resize: should be True if size of img > (1280, 720)
+        :param resize: should be True if size of img_width > 720
         :return: ảnh chỉ chứa thẻ sinh viên
         """
         img = origin_img.copy()
         (h, w, c) = img.shape
-        if resize and (w, h) > (1280, 720):
-            if w > h:
-                img = cv2.resize(img, (1280, 720))
-            else:
-                img = cv2.resize(img, (720, 1280))
+        if resize and h > 720:
+            img = imutils.resize(img, width=720)
         # get four corner coordinates
         four_corner = self.find_four_corner(img)
         # calculate size for output img

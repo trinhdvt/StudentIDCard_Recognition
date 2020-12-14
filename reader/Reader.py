@@ -1,5 +1,5 @@
 from vietocr.tool.translate import build_model, translate, process_input
-from utils.utils import download_model
+from tools.utils import download_model
 import torch
 import os
 

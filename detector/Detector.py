@@ -2,8 +2,7 @@ import numpy as np
 import cv2
 import time
 import os
-from utils.utils import download_model
-from utils.utils import parse_img_size
+from tools.utils import download_model, parse_img_size
 
 
 class Detector:
