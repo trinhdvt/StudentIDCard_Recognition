@@ -14,10 +14,10 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 @cross_origin()
 def index():
-    return "Welcome to Flask API"
+    return "Hello World", 200
 
 
 @app.route(config.MSSV_API_NAME, methods=['POST'])
@@ -31,12 +31,6 @@ def run_for_my_life():
     # run module id recognize
     cropped = cropper.predict(origin_img, resize=False)
     #
-    return_data = {
-        'mssv': None,
-        'time': None,
-        'image': None
-    }
-    #
     try:
         id_only_img, _ = detector.predict(cropped)
     except TypeError:
@@ -44,7 +38,7 @@ def run_for_my_life():
         try:
             id_only_img, _ = detector.predict(origin_img)
         except TypeError:
-            return return_data
+            return "", 406
     id_only_img = Image.fromarray(id_only_img)
     mssv = reader.predict(id_only_img)
     end = time.time()
@@ -54,7 +48,7 @@ def run_for_my_life():
         'time': end - start,
         'image': cv2img_to_base64(None, cropped, False).decode('utf-8')
     }
-    return return_data
+    return return_data, 200
 
 
 if __name__ == '__main__':
