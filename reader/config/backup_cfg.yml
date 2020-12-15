@@ -1,3 +1,6 @@
+aug:
+  image_aug: true
+  masked_language_model: true
 backbone: vgg19_bn
 cnn:
   hidden: 256
@@ -12,7 +15,7 @@ cnn:
     - 1
   - - 1
     - 1
-  pretrained: true
+  pretrained: false
   ss:
   - - 2
     - 2
@@ -67,3 +70,4 @@ transformer:
   trans_dropout: 0.1
 vocab: 'aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~ '
 weights: https://drive.google.com/uc?id=13327Y1tz1ohsm5YZMyXVMPIOjoOA0OaA
+
