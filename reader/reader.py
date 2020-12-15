@@ -26,7 +26,8 @@ class Reader:
                             self.config['dataset']['image_max_width'])
 
         img = img.to(self.config['device'])
-
-        s = translate(img, self.model)[0].tolist()
+        #
+        s, _ = translate(img, self.model)
+        s = s[0].tolist()
         s = self.vocab.decode(s)
         return s
