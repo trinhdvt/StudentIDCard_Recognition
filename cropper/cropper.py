@@ -23,11 +23,13 @@ class Cropper:
         :return: Toạ độ 4 góc thẻ (top_left -> top_right -> bottom_right -> bottom_left)
         """
         # remove noise with Gaussian Filter kernel size = (5,5)
-        img = cv2.GaussianBlur(img, (5, 5), 0)
+        # img = cv2.GaussianBlur(img, (5, 5), 0)
+        img = cv2.bilateralFilter(img, 9, 75, 75)
         # cvt img to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # apply threshold for detect ROI (Regions of Interest)
-        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 3)
+        # thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 3)
+        thresh = cv2.Canny(gray, 50, 100)
         # find all contours
         contours = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         # grab contours
