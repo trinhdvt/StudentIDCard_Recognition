@@ -1,10 +1,10 @@
-from tools.utils import base64_to_cv2img, cv2img_to_base64
+import time
+from PIL import Image
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
-from PIL import Image
-from tools.loader import load_model
 from tools import config
-import time
+from tools.loader import load_model
+from tools.utils import base64_to_cv2img, cv2img_to_base64
 
 global cropper
 global detector
@@ -23,12 +23,13 @@ def index():
 @app.route(config.MSSV_API_NAME, methods=['POST'])
 @cross_origin()
 def run_for_my_life():
+    #
     start = time.time()
     # get data from request
     img_b64 = request.form.get('image')
     # convert base64 string to img
     origin_img = base64_to_cv2img(img_b64)
-    # run module id recognize
+    #
     cropped = cropper.predict(origin_img, resize=False)
     #
     try:
@@ -36,11 +37,14 @@ def run_for_my_life():
     except TypeError:
         # don't stop, try it again
         try:
+            print("Cropper failed!")
             id_only_img, _ = detector.predict(origin_img)
         except TypeError:
             return "", 406
+    #
     id_only_img = Image.fromarray(id_only_img)
     mssv = reader.predict(id_only_img)
+    #
     end = time.time()
     # send back data
     return_data = {
@@ -52,7 +56,8 @@ def run_for_my_life():
 
 
 if __name__ == '__main__':
-    print("Model is loading")
-    cropper, detector, reader = load_model()
-    print("Model is ready!")
+    if cropper is None or detector is None or reader is None:
+        print("Model is loading")
+        cropper, detector, reader = load_model()
+        print("Model is ready!")
     app.run(debug=True, host=config.MSSV_API_ADDRESS, port=config.API_PORT)

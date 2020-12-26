@@ -1,6 +1,7 @@
-# import gevent.monkey
-#
-# gevent.monkey.patch_all()
+import gevent.monkey
+
+gevent.monkey.patch_all()
+from firebase_admin import initialize_app, credentials, db
 import grequests
 import json
 import time
@@ -9,7 +10,6 @@ import os
 from threading import Thread
 from datetime import datetime
 from tools import config, utils
-from firebase_admin import initialize_app, credentials, db
 
 # ---------------- INITIALIZE FIREBASE CONNECT --------------------
 cred = credentials.Certificate(config.FIREBASE_KEY)
@@ -45,9 +45,13 @@ def handle_new_data(new_bsx, new_sv):
     bsx_image = request_data[0]['image']
     mssv_text = request_data[1]['mssv']
     mssv_image = request_data[1]['image']
+    print(f"Time for ID-Card: {request_data[1]['time']}")
+    print(f"Time for BSX: {request_data[0]['time']}")
     # -------------------- SEND TO LOCAL_WEB_SERVER --------------------
     bsx_path, mssv_path = utils.save_to_local((bsx_text, bsx_image), (mssv_text, mssv_image))
-    Thread(target=utils.to_web_storage, args=(bsx_path, mssv_path,)).start()
+    #
+    Thread(target=utils.to_web_storage, args=(bsx_path,)).start()
+    Thread(target=utils.to_web_storage, args=(mssv_path,)).start()
     # utils.to_web_storage(bsx_path, mssv_path)
     process_end = time.time()
     print(f"Process time {process_end - process_start}")
@@ -79,7 +83,7 @@ def handle_new_data(new_bsx, new_sv):
             Thread(target=utils.turn_led_on, args=('green',)).start()
             #
             Thread(target=db.reference("/baixe").child(update_key).update,
-                   args=({'timeOut': new_data['timeOut']},)).start()
+                   args=({'timeOut': new_data['timeIn']},)).start()
         else:
             print("Warning warning! Yellow LED is ON! Check it out!")
             #
@@ -117,6 +121,6 @@ if __name__ == '__main__':
                 print(f"Error: {e}")
             finally:
                 os.remove(bsx_path)
-                os.remove(bsx_img)
+                os.remove(mssv_path)
             #
         time.sleep(1)
