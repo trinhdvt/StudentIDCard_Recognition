@@ -8,6 +8,7 @@ import base64
 import os
 import gdown
 import requests
+import imutils
 
 
 def resize_img(img, img_path=None):
@@ -16,9 +17,7 @@ def resize_img(img, img_path=None):
     #
     (h, w, _) = img.shape
     if w > config.IMG_WIDTH:
-        ratio = config.IMG_WIDTH / float(w)
-        dim = (config.IMG_WIDTH, int(ratio * h))
-        img = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
+        img = imutils.resize(img, width=config.IMG_WIDTH)
     #
     return img
 

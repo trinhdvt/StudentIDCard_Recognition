@@ -12,9 +12,10 @@ def load_model(backup_reader=False):
     detector = Detector(config.DETECTOR_CFG, config.DETECTOR_WEIGHT)
     #
     reader_config = Cfg.load_config_from_file(config.READER_CFG)
-    if backup_reader:
-        reader_config = Cfg.load_config_from_file(config.READER_BACKUP_CFG)
     reader_config['weights'] = config.READER_WEIGHT
+    if backup_reader:
+        reader_config['weights'] = config.READER_BACKUP_WEIGHT
     reader_config['device'] = config.DEVICE
     reader = Reader(reader_config, backup_reader)
+    #
     return cropper, detector, reader
