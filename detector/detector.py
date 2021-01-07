@@ -67,18 +67,24 @@ class Detector:
         #
         if len(boxes_idx) > 0:
             result = {}
+            coordinate = {}
             for i in boxes_idx.flatten():
                 (x, y) = (boxes[i][0], boxes[i][1])
                 (w, h) = (boxes[i][2], boxes[i][3])
                 #
                 color = [int(c) for c in colors[classIDs[i]]]
-                cropped_img = clone_img[y:y + h, x:x + w]
                 class_name = self.classes[classIDs[i]]
+                if class_name == 'name':
+                    h -= 5
+                    y += 5
+                cropped_img = clone_img[y:y + h, x:x + w]
                 result[class_name] = cropped_img
+
+                coordinate[class_name] = (x, y, w, h)
                 #
                 cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
                 text = "{}: {:.4f}".format(class_name, confidences[i])
                 cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
             #
             # return cropped_img, img
-            return result, img
+            return result, img, coordinate
