@@ -33,16 +33,16 @@ def run_for_my_life():
     cropped = cropper.predict(origin_img, resize=False)
     #
     try:
-        id_only_img, _ = detector.predict(cropped)
+        detector_result, _ = detector.predict(cropped)
     except TypeError:
         # don't stop, try it again
         try:
             print("Cropper failed!")
-            id_only_img, _ = detector.predict(origin_img)
+            detector_result, _ = detector.predict(origin_img)
         except TypeError:
             return "", 406
     #
-    id_only_img = Image.fromarray(id_only_img)
+    id_only_img = Image.fromarray(detector_result['mssv'])
     mssv = reader.predict(id_only_img)
     #
     end = time.time()
@@ -56,8 +56,7 @@ def run_for_my_life():
 
 
 if __name__ == '__main__':
-    if cropper is None or detector is None or reader is None:
-        print("Model is loading")
-        cropper, detector, reader = load_model()
-        print("Model is ready!")
+    print("Model is loading")
+    cropper, detector, reader = load_model()
+    print("Model is ready!")
     app.run(debug=True, host=config.MSSV_API_ADDRESS, port=config.API_PORT)

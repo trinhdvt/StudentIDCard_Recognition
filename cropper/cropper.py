@@ -89,7 +89,7 @@ class Cropper:
         img = origin_img.copy()
         (h, w, c) = img.shape
         if resize and h > 720:
-            img = imutils.resize(img, width=720)
+            img = imutils.resize(img, width=800)
         # get four corner coordinates
         four_corner = self.find_four_corner(img)
         # calculate size for output img

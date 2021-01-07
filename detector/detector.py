@@ -6,16 +6,20 @@ from tools.utils import download_model, parse_img_size
 
 
 class Detector:
-    def __init__(self, cfg_path, weight_path, labels=None):
-        if labels is None:
-            labels = ['id']
+    def __init__(self, cfg_path, weight_path, labels_path=None):
+        assert os.path.exists(cfg_path), "Config file not found"
+        assert os.path.exists(labels_path), "Labels file not found"
+        #
         self.cfg_path = cfg_path
         self.weight_path = weight_path
+        self.classes = open(labels_path).read().strip().split("\n")
+        #
         if not os.path.exists(weight_path):
             download_model("detector")
+        #
         self.IMG_WIDTH, self.IMG_HEIGHT = parse_img_size(self.cfg_path)
-        self.labels = labels
         self.net = cv2.dnn.readNetFromDarknet(self.cfg_path, self.weight_path)
+        self.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.ln = self.net.getLayerNames()
         self.ln = [self.ln[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 
@@ -40,6 +44,7 @@ class Detector:
         # ------------------------ OUTPUT FROM YOLO ------------------------
         boxes = []
         confidences = []
+        classIDs = []
         for out in output:
             for detection in out:
                 scores = detection[5:]
@@ -53,15 +58,27 @@ class Detector:
                     y = int(centerY - height / 2)
                     boxes.append([x, y, int(width), int(height)])
                     confidences.append(float(confidence))
+                    classIDs.append(class_id)
         # ------------------------ NON-MAX SUPPRESSION ------------------------
-        boxes_idx = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.3)
+        boxes_idx = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+        #
+        np.random.seed(42)
+        colors = np.random.randint(0, 255, size=(len(self.classes), 3), dtype='uint8')
+        #
         if len(boxes_idx) > 0:
-            cropped_img = None
+            result = {}
             for i in boxes_idx.flatten():
                 (x, y) = (boxes[i][0], boxes[i][1])
                 (w, h) = (boxes[i][2], boxes[i][3])
+                #
+                color = [int(c) for c in colors[classIDs[i]]]
                 cropped_img = clone_img[y:y + h, x:x + w]
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                cv2.putText(img, "mssv", (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-            return cropped_img, img
+                class_name = self.classes[classIDs[i]]
+                result[class_name] = cropped_img
+                #
+                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                text = "{}: {:.4f}".format(class_name, confidences[i])
+                cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+            #
+            # return cropped_img, img
+            return result, img
