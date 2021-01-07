@@ -5,7 +5,7 @@ from reader.config import Cfg
 from tools import config
 
 
-def load_model(backup_reader=False):
+def load_model():
     #
     cropper = Cropper()
     #
@@ -13,9 +13,7 @@ def load_model(backup_reader=False):
     #
     reader_config = Cfg.load_config_from_file(config.READER_CFG)
     reader_config['weights'] = config.READER_WEIGHT
-    if backup_reader:
-        reader_config['weights'] = config.READER_BACKUP_WEIGHT
     reader_config['device'] = config.DEVICE
-    reader = Reader(reader_config, backup_reader)
+    reader = Reader(reader_config)
     #
     return cropper, detector, reader

@@ -5,17 +5,15 @@ import os
 
 
 class Reader:
-    def __init__(self, config, backup=False):
+    def __init__(self, config):
         device = config['device']
         model, vocab = build_model(config)
         weights = config['weights']
+        #
         if not os.path.exists(weights):
-            if backup:
-                download_model("reader_backup")
-            else:
-                download_model("reader")
+            download_model("reader")
         model.load_state_dict(torch.load(weights, map_location=torch.device(device)))
-
+        #
         self.config = config
         self.model = model
         self.vocab = vocab
