@@ -1,10 +1,12 @@
 import time
-from PIL import Image
+import numpy as np
+import cv2
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from tools import config
 from tools.loader import load_model
-from tools.utils import base64_to_cv2img, cv2img_to_base64
+from tools.utils import base64_to_cv2img, cv2img_to_base64, cv2img_to_pil
+from PIL import ImageDraw, ImageFont
 
 global cropper
 global detector
@@ -30,28 +32,32 @@ def run_for_my_life():
     # convert base64 string to img
     origin_img = base64_to_cv2img(img_b64)
     #
-    cropped = cropper.predict(origin_img, resize=False)
-    #
     try:
-        detector_result, _ = detector.predict(cropped)
-    except TypeError:
-        # don't stop, try it again
-        try:
-            print("Cropper failed!")
-            detector_result, _ = detector.predict(origin_img)
-        except TypeError:
-            return "", 406
-    #
-    id_only_img = Image.fromarray(detector_result['mssv'])
-    mssv = reader.predict(id_only_img)
+        cropped_img = cropper.predict(origin_img, resize=True)
+        detect_rs, annotated_img, coordinate = detector.predict(cropped_img, True)
+        reader_rs = {}
+        #
+        cropped_img = cv2img_to_pil(cropped_img)
+        for key, value in detect_rs.items():
+            text = reader.predict(cv2img_to_pil(value))
+            reader_rs[key] = text
+            #
+            (x, y, w, h) = coordinate[key]
+            draw_img = ImageDraw.Draw(cropped_img)
+            draw_img.text((x, y - 5), text, fill=(255, 0, 0),
+                          font=ImageFont.truetype(config.DISPLAY_FONT, 18))
+    except Exception as e:
+        print(e)
+        return "", 406
     #
     end = time.time()
     # send back data
+    cropped_img = cv2.cvtColor(np.array(cropped_img), cv2.COLOR_RGB2BGR)
     return_data = {
-        'mssv': mssv,
+        'result': reader_rs,
         'time': end - start,
-        'image': cv2img_to_base64(None, cropped, False).decode('utf-8')
-    }
+        'image': cv2img_to_base64(None, cropped_img, False).decode('utf-8')
+        }
     return return_data, 200
 
 
