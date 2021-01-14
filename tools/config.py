@@ -1,7 +1,5 @@
 # -------------------- SYSTEM CONFIG --------------------
-import os
-
-ROOT_CONTENT = os.getcwd()
+ROOT_CONTENT = "/Users/trinhdvt/Desktop/StudentIDCard_Recognition"
 # -------------------- CROPPER CONFIG --------------------
 IMG_WIDTH = 768
 # -------------------- DETECTOR CONFIG --------------------
