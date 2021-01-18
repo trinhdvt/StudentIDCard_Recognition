@@ -15,9 +15,9 @@ READER_WEIGHT_DRIVE_ID = "1k08K0f-r6VOGvlZ1EyF4DL6MdnOJX_PK"
 DEVICE = "cpu"
 # -------------------- WEB_SERVER CONFIG --------------------
 MSSV_API_NAME = "/id_recognize"
-MSSV_API_ADDRESS = "0.0.0.0"
+MSSV_API_ADDRESS = "127.0.0.1"
 API_PORT = 8000
-MSSV_API_URL = "http://0.0.0.0:8000/id_recognize"
+MSSV_API_URL = "http://127.0.0.1:8000/id_recognize"
 BSX_API_URL = "http://192.168.43.98:8000/bsx"
 # -------------------- WEB RESOURCE CONFIG --------------------
 LOCAL_IMG_STORAGE = "/home/dvt/Desktop/pi_img/web_img/"
