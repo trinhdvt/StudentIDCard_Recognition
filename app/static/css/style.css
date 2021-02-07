@@ -1,0 +1,146 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 18px;
+    font-family: "IBM Plex Sans", sans-serif;
+    line-height: 1.75;
+    color: #1f1f1f;
+}
+
+.hidden {
+    display: none;
+}
+
+.title > h1 {
+    text-align: center;
+    font-family: "Sawarabi Mincho", sans-serif !important;
+}
+
+.main-content {
+    display: flex;
+}
+
+.container {
+    max-width: 600px;
+    max-height: 600px;
+    padding: 20px;
+    margin: auto;
+    background-color: #ffffff;
+    box-shadow: 0 8px 50px 0 rgb(0 0 0 / 10%);
+    border-radius: 5px;
+    border: 1px solid #fff;
+}
+
+#loading-gif {
+    max-width: 65px;
+    width: 100%;
+    height: auto;
+}
+
+.option-list {
+    margin-bottom: 25px;
+}
+
+.option-list > label {
+    font-size: 18px;
+    color: #b7b7b7;
+    position: relative;
+    margin-right: 5px;
+}
+
+input[type="radio"]:checked + label {
+    color: black;
+    font-weight: bold;
+}
+
+.input-file {
+    height: 55px;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: #e7e8f1;
+}
+
+.input-file-custom {
+    appearance: none;
+    box-shadow: none;
+    line-height: 50px;
+    font-size: 16px;
+    color: #101e76;
+    width: 100%;
+    background: #e7e8f1 none;
+    border: 1px solid #e7e8f1;
+    border-radius: 0;
+    padding: 0 20px;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    height: 100% !important;
+    opacity: 0;
+    margin-bottom: 0 !important;
+}
+
+.input-file-text {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 0;
+    right: 0;
+    color: #757575;
+    font-size: 16px;
+    padding: 0 20px;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.sample-img {
+    max-width: 100%;
+    height: auto;
+    padding-right: 10px;
+}
+
+ul {
+    list-style: none;
+}
+
+.result {
+    display: flex;
+    background-color: #e7e8f1;
+}
+
+@media (max-width: 550px) {
+    .result {
+        flex-direction: column;
+    }
+}
+
+.input-sample {
+    flex: 1;
+}
+
+.result-data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.result-data > li {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.result-data > li > b {
+    display: block;
+    min-width: 35%;
+}
+
+.result-text {
+    text-transform: uppercase;
+}
