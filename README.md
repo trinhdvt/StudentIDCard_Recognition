@@ -1,2 +1,2 @@
 # StudentIDCard_Recognition
-> Demo link: [`student-ocr`](student-ocr.southeastasia.azurecontainer.io)
+> Demo link: [`student-ocr`](http://student-ocr.southeastasia.azurecontainer.io)
