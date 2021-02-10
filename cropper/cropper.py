@@ -28,8 +28,8 @@ class Cropper:
         # cvt img to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         # apply threshold for detect ROI (Regions of Interest)
-        # thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 3)
-        thresh = cv2.Canny(gray, 50, 100)
+        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 3)
+        # thresh = cv2.Canny(gray, 50, 100)
         # find all contours
         contours = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         # grab contours
@@ -96,8 +96,8 @@ class Cropper:
         width, height = self.calculate_fit_size(four_corner)
         # rotate img
         dst_point = np.array([[0, 0], [width, 0], [width, height], [0, height]], dtype="float32")
-        M = cv2.getPerspectiveTransform(four_corner, dst_point)
-        transformed_img = cv2.warpPerspective(img, M, (width, height))
+        m = cv2.getPerspectiveTransform(four_corner, dst_point)
+        transformed_img = cv2.warpPerspective(img, m, (width, height))
         return transformed_img
 
     def predict(self, img, img_path=None, resize=False):

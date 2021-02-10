@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TEST</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300&display=swap"
+            rel="stylesheet"
+    />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap"
+            rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="title">
+    <h1>ダナン工科大学の学生カードを情報抽出</h1>
+</div>
+<div class="main-content">
+    <div class="web-infor"></div>
+    <div class="container">
+        <div class="option-list">
+            <input type="radio" name="option-type" id="id" checked/>
+            <label for="id">Student's ID Card</label>
+            <input type="radio" name="option-type" id="dv" disabled/>
+            <label for="dv">ID Card</label>
+            <input type="radio" name="option-type" id="passport" disabled/>
+            <label for="passport">Passport</label>
+        </div>
+        <div class="input-file">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <input
+                        type="file"
+                        class="input-file-custom"
+                        name="input-img"
+                        id="input-img"
+                />
+            </form>
+            <span class="input-file-text"> Choose ID Image </span>
+        </div>
+        <div style="display: flex">
+            <h3>Result</h3>
+            <img src="{{ url_for('static', filename='img/loading.gif') }}" alt="loading" id="loading-gif"/>
+        </div>
+        <div class="result">
+            <div class="input-sample">
+                <img class="sample-img" id="result-img" src="{{ url_for('static', filename='img/cmnd.png') }}"
+                     alt="image"/>
+            </div>
+            <ul class="result-data">
+                <li>
+                    <b>Full name</b>
+                    <div class="result-text" id="full-name">Do Van Trinh</div>
+                </li>
+                <li>
+                    <b>Number</b>
+                    <div class="result-text" id="number">102180276</div>
+                </li>
+                <li>
+                    <b>Birthday</b>
+                    <div class="result-text" id="birthday">04/09/2000</div>
+                </li>
+                <li>
+                    <b>Class</b>
+                    <div class="result-text" id="class">18TCLC-Nhat</div>
+                </li>
+                <li>
+                    <b>Faculty</b>
+                    <div class="result-text" id="faculty">CNTT</div>
+                </li>
+                <li>
+                    <b>Year</b>
+                    <div class="result-text" id="year">2018</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/app.js') }}">
+
+</script>
+</body>
+</html>
