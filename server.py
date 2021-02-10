@@ -7,7 +7,6 @@ from PIL import Image
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS, cross_origin
 
-from tools import config
 from tools.loader import load_model
 from tools.utils import cv2img_to_base64, cv2img_to_pil
 
@@ -56,6 +55,12 @@ def index():
     return render_template('index.html')
 
 
+@app.route("/test", methods=['GET', 'POST'])
+@cross_origin()
+def test():
+    return "OK", 200
+
+
 @app.route("/uploadImage", methods=['POST'])
 @cross_origin()
 def upload_image():
@@ -77,4 +82,4 @@ if __name__ == '__main__':
     print("Model is loading")
     cropper, detector, reader = load_model()
     print("Model is ready!")
-    app.run(debug=True, host='localhost', port=config.API_PORT)
+    app.run(debug=True, host='0.0.0.0', port=80)
