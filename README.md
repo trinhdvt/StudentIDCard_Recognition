@@ -1,6 +1,4 @@
-# Project Name
-
-> DUT's Student ID Card Recognition
+# Student ID Card Recognition
 
 ## Table of contents
 
@@ -21,7 +19,7 @@ Image Processing and state-of-the-art Deep Learning's model (YOLO + Transformer)
 
 ## Application
 
-Student ID Card Recognition can be applied with License Plate Recognition for build a parking lot for Da Nang University
+Student ID Card Recognition can be applied with License Plate Recognition to build a parking lot for Da Nang University
 of Technology.
 
 ## System
