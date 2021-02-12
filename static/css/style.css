@@ -57,7 +57,6 @@ input[type="radio"]:checked + label {
 
 .input-file {
     height: 55px;
-    margin-bottom: 20px;
     position: relative;
     background-color: #e7e8f1;
 }
@@ -100,7 +99,6 @@ input[type="radio"]:checked + label {
 .sample-img {
     max-width: 100%;
     height: auto;
-    padding-right: 10px;
 }
 
 ul {
@@ -143,4 +141,38 @@ ul {
 
 .result-text {
     text-transform: uppercase;
+}
+
+hr {
+    width: 50%;
+    margin: 10px auto 0 auto;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    outline: none;
+    background-color: transparent;
+}
+
+.footer i {
+    font-size: 25px;
+}
+
+.doc {
+    text-align: center;
+    margin-top: -30px;
+    margin-bottom: 10px;
+}
+
+.btn--link {
+    font-size: 20px;
+    font-weight: bold;
+    color: #101e76;
 }

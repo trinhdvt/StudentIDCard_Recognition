@@ -2,7 +2,8 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>TEST</title>
+    <title>ID Card OCR</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.jpg') }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
     <link rel="preconnect" href="https://fonts.gstatic.com"/>
     <link
@@ -14,21 +15,33 @@
             rel="stylesheet"
     />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+            integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+            crossorigin="anonymous"
+    />
 </head>
 <body>
 <div class="title">
-    <h1>ダナン工科大学の学生カードを情報抽出</h1>
+    <h1>DUT's Student ID Card Recognition</h1>
+</div>
+<div class="doc">
+    <a
+            href="https://github.com/trinhdvt/StudentIDCard_Recognition/blob/main/README.md"
+            class="btn--link"
+            target="blank"
+    >Read Document <i class="fas fa-angle-right"></i
+    ></a>
 </div>
 <div class="main-content">
     <div class="web-infor"></div>
     <div class="container">
         <div class="option-list">
             <input type="radio" name="option-type" id="id" checked/>
-            <label for="id">Student's ID Card</label>
+            <label for="id">Student ID Card</label>
             <input type="radio" name="option-type" id="dv" disabled/>
-            <label for="dv">ID Card</label>
-            <input type="radio" name="option-type" id="passport" disabled/>
-            <label for="passport">Passport</label>
+            <label for="dv">Vietnamese ID Card</label>
         </div>
         <div class="input-file">
             <form action="#" method="post" enctype="multipart/form-data">
@@ -47,8 +60,7 @@
         </div>
         <div class="result">
             <div class="input-sample">
-                <img class="sample-img" id="result-img" src="{{ url_for('static', filename='img/cmnd.png') }}"
-                     alt="image"/>
+                <img class="sample-img" src="{{ url_for('static', filename='img/cmnd.png') }}" alt="image"/>
             </div>
             <ul class="result-data">
                 <li>
@@ -79,8 +91,15 @@
         </div>
     </div>
 </div>
-<script src="{{ url_for('static', filename='js/app.js') }}">
+<hr/>
+<div class="footer">
+    <a
+            href="https://github.com/trinhdvt/StudentIDCard_Recognition"
+            target="blank"
+    ><i class="fab fa-github"></i
+    ></a>
+</div>
 
-</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
