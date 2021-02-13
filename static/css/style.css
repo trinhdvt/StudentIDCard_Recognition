@@ -118,6 +118,7 @@ ul {
 
 .input-sample {
     flex: 1;
+    padding-right: 5px;
 }
 
 .result-data {
