@@ -59,8 +59,8 @@ Because I don't have a server with GPU, so the processing time is quite long. Th
 
 ### Requirements
 
-* The input image must have 4 clear angles and its background should be white or gray and not contain anything else :
-  disappointed_relieved: to make sure the ID Card can be _seen_.
+* The input image must have 4 clear angles and its background should be white or gray and not contain anything else 
+  :disappointed_relieved: to make sure the ID Card can be _seen_.
 * All information fields must be visible, readable, unmodified and not blurred.
 * The input image size does not exceed **5 MB**, and the minimum resolution is approximately **640x480** to ensure the
   confident rate.
