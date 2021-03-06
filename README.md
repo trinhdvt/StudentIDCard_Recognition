@@ -47,7 +47,7 @@ Current features:
 
 To-do list:
 
-* Use an Object Detection model (YOLO, SSD, etc) for scanning ID Card in the input image instead of use Image
+* Use an Object Detection model (YOLO, SSD, etc) for scanning ID Card in the input image instead of using Image
   Processing.
 * Add one more function to this system: Vietnamese ID Card Recognition
 
