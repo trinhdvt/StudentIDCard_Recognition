@@ -77,6 +77,7 @@ Because I don't have a server with GPU, so the processing time is quite long. Th
   ![bad-image](test_img/fb_img/102180236.jpeg)
 
 ## How to test
+> This website is temporarily unavailable because my Azure account has no credit to keeping this service :sweat_smile:
 
 I have built a simple [**website**](http://student-ocr.southeastasia.azurecontainer.io) to show how it works. However,
 to use this website you need a Student ID Card as your input image. So, please download
