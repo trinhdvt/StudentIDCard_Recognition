@@ -6,6 +6,6 @@ gdown~=3.11.0
 scikit-image~=0.18.1
 opencv-python~=4.5.1.48
 Flask~=1.1.2
-PyYAML~=5.3.1
+PyYAML~=5.4.1
 vietocr~=0.3.5
 flask-cors
